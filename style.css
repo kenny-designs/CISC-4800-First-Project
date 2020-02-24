@@ -1,0 +1,41 @@
+/* Colorscheme for website base on the original Game Boy color palette
+ * Courtesy of:
+ * https://www.designpieces.com/palette/game-boy-original-color-palette-hex-and-rgb/
+ *
+ * Darkest Green
+ * Hex: #0f380f
+ * RGB: 15, 56, 15
+ *
+ * Dark Green
+ * Hex: #306230
+ * RGB: 48, 98, 48
+ *
+ * Light Green
+ * Hex: #8bac0f
+ * RGB: 139, 172, 15
+ *
+ * Lightest Green
+ * Hex: #9bbc0f
+ * RGB: 155, 188, 15
+ */ 
+
+/* Variables for colors */ 
+:root {
+  --darkest-green-color: #0f380f;
+  --dark-green-color: #306230;
+  --light-green-color: #8bac0f;
+  --lightest-green-color: #9bbc0f;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.bg {
+  /* Background color */
+  background-color: var(--light-green-color);
+
+  /* Full height */
+  height: 75%; 
+}

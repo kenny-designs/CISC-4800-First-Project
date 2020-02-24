@@ -1,0 +1,7 @@
+# ignore vim related files
+*~
+*.swp
+*.swo
+
+# bash scripts
+*.sh
