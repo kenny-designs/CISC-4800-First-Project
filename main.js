@@ -7,8 +7,8 @@ let controlsButton  = document.getElementById('controls-button'),
     titleText       = document.getElementById('title-text'),
     controlsText    = document.getElementById('controls-text');
 
-// Enable Controls Overlay
-controlsButton.addEventListener('click', (e) => {
+// Toggle Show Controls
+controlsButton.addEventListener('click', e => {
   toggleFade(titleText);
   toggleFade(controlsText);
 });
