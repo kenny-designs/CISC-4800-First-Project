@@ -50,6 +50,27 @@ body, html {
 }
 
 /* HOME.HTML STYLES */
+/* Top Left Container related */
+#top-left-container {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  font-size: 1.3em;
+}
+
+#top-left-container p {
+  margin: 0;
+}
+
+/* Top Right Container related */
+#top-right-container {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  font-size: 1.3em;
+}
+
+
 /* Title Container Related */
 #title-container {
   background-color: var(--lightest-green-color);
