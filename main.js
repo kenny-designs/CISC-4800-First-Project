@@ -1,13 +1,30 @@
+// Constants
+const fadeInClass  = 'fade-in',
+      fadeOutClass = 'fade-out';
+
 // Obtain elements
 let controlsButton  = document.getElementById('controls-button'),
-    controlsOverlay = document.getElementById('controls-overlay');
+    titleText       = document.getElementById('title-text'),
+    controlsText    = document.getElementById('controls-text');
 
 // Enable Controls Overlay
 controlsButton.addEventListener('click', (e) => {
-  controlsOverlay.style.display = 'block';
+  toggleFade(titleText);
+  toggleFade(controlsText);
 });
 
-// Disable Controls Overlay
-controlsOverlay.addEventListener('click', (e) => {
-  controlsOverlay.style.display = 'none';
-});
+/**
+ * Toggles element between the fade-in and fade-out classes
+ * if it has either of them. Otherwise, it does nothing.
+ * @param elm - The element to swap fades
+ */ 
+function toggleFade(elm) {
+  if (elm.className === fadeInClass) {
+    elm.classList.remove(fadeInClass);
+    elm.classList.add(fadeOutClass);
+  }
+  else if (elm.className === fadeOutClass) {
+    elm.classList.remove(fadeOutClass);
+    elm.classList.add(fadeInClass);
+  }
+}
