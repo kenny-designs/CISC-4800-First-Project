@@ -19,14 +19,17 @@
  * RGB: 155, 188, 15
  */ 
 
-/* Variables for colors */ 
 :root {
+  /* Variables for colors */ 
   --darkest-green-color: #0f380f;
   --dark-green-color: #306230;
   --light-green-color: #8bac0f;
   --lightest-green-color: #9bbc0f;
-}
 
+  /* Variable for gameboard grid */
+  --grid-cols: 1;
+  --grid-rows: 1;
+}
 
 /* GLOBAL STYLES */
 body, html {
@@ -69,7 +72,6 @@ body, html {
   right: 16px;
   font-size: 1.3em;
 }
-
 
 /* Title Container Related */
 #title-container {
@@ -192,3 +194,18 @@ body, html {
   font-size: 1.75em;
 }
 
+
+/* GAME.HTML STYLES */
+/* Gameboard related */
+#gameboard {
+  display: grid;
+  grid-gap: 1em;
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+}
+
+.grid-item {
+  padding: 1em;
+  border: 1px solid #ddd;
+  text-align: center;
+}
