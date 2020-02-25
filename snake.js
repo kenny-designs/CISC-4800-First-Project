@@ -92,15 +92,35 @@ class Game {
   }
 
   /**
-   * Randomly spawns a wifi signal
+   * Returns the cell at the given x and y position
+   */ 
+  getCell(x, y) {
+    return this.grid[x + this.width * y];
+  }
+
+  /**
+   * Returns a random cell
+   * @return A random cell
+   */
+  getRandomCell() {
+    return this.grid[Math.floor(Math.random() * this.grid.length)];
+  }
+
+  /**
+   * Checks if the cell is empty
+   * @return true if the cell is empty. False otherwise
+   */
+  isCellEmpty(cell) {
+    return cell.innerText === '';
+  }
+
+  /**
+   * Randomly spawns a wifi signal in a free spot
    */ 
   spawnWifi() {
-    // obtain a random x and y pos
-    let randX = Math.floor(Math.random() * this.width),
-        randY = Math.floor(Math.random() * this.height);
-
-    // spawn the wifi
-    this.setCell(randX, randY, 'W');
+    let cell;
+    while(!this.isCellEmpty(cell = this.getRandomCell())) {}
+    cell.innerText = 'W';
   }
 }
 
