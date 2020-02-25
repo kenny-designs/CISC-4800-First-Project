@@ -219,3 +219,8 @@ body, html {
   height: 0;
   padding-bottom: 100%;
 }
+
+/* Snake Page Related */
+#snake-page {
+  background-color: var(--darkest-green-color);
+}
