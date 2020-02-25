@@ -8,6 +8,7 @@ class Game {
   constructor(width, height) {
     this.width = width;   // width of board
     this.height = height; // height of board
+    this.tickRate = 500;  // time between game ticks in milliseconds
 
     // reference to gameboard element
     this.gameboard = document.getElementById('gameboard');
@@ -17,6 +18,9 @@ class Game {
 
     // initialize the game
     this.init();
+
+    // start the game
+    this.beginGame();
   }
 
   /**
@@ -25,6 +29,32 @@ class Game {
   init() {
     this.createBoard(this.width, this.height);
     this.spawnWifi();
+  }
+
+  /**
+   * Begin the main gameplay loop
+   */ 
+  beginGame() {
+    window.setInterval(() => {
+      this.gameplayLoop();
+    }, this.tickRate);
+  }
+
+  /**
+   * The all mighty game play loop!
+   */
+  gameplayLoop() {
+    this.clearBoard();
+    this.spawnWifi();
+  }
+
+  /**
+   * Clears the board of all text
+   */
+  clearBoard() {
+    this.grid.forEach(cell => {
+      cell.innerText = '';
+    });
   }
 
   /**
@@ -72,6 +102,11 @@ class Game {
     // spawn the wifi
     this.setCell(randX, randY, 'W');
   }
+}
+
+/* The snake itself */
+class Snake {
+  constructor() {}
 }
 
 // start the game with a 16 by 16 square grid
