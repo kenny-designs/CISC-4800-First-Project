@@ -110,10 +110,57 @@ body, html {
 }
 
 /* ABOUT.HTML STYLES */
+/* Snake Sidebar Container Related */
+#snake-sidebar-container {
+  height: 100%;
+  width: 160px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: var(--darkest-green-color);
+  overflow: hidden;
+  padding-top: 20px;
+}
+
+#snake-sidebar-container a,
+#snake-sidebar-container p {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: var(--light-green-color);
+  display: block;
+  margin: 0 10px;
+}
+
+#snake-sidebar-container a {
+  background-color: var(--dark-green-color);
+}
+
+#snake-sidebar-container a:hover {
+  color: var(--dark-green-color);
+  background-color: var(--light-green-color);
+}
+
+/* About Container Related */
 #about-container {
+  height: auto;
   background-color: var(--lightest-green-color);
+  margin-left: 160px; /* Same as the width of the sidenav */
+  padding: 25px;
 }
 
 #about-container hr {
+  margin: 0 15px;
   border: 1px solid var(--darkest-green-color);
 }
+
+#about-container h1 {
+  font-size: 3em;
+  text-decoration: underline;
+}
+
+#about-container p {
+  font-size: 1.75em;
+}
+
