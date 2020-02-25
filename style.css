@@ -27,9 +27,11 @@
   --lightest-green-color: #9bbc0f;
 }
 
+
 body, html {
   height: 100%;
   margin: 0;
+  font-family: 'VT323', sans-serif;
 }
 
 .bg {
