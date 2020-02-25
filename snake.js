@@ -1,3 +1,27 @@
+/**
+ * A point in 2D space
+ */ 
+class Point2D {
+  /**
+   * Creates a point at the given coords
+   * @param x - the x coord
+   * @param y - the y coord
+   */ 
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  /**
+   * Check if two points are equal
+   * @param point - the other point
+   */
+  isEqual(point) {
+    return this.x === point.x &&
+           this.y === point.y;
+  }
+}
+
 /* Handles the Snake game */
 class Game {
   /**
@@ -42,6 +66,7 @@ class Game {
    * Setup event listeners for controls
    */ 
   setupListeners() {
+    // update snake's direction based on keypress
     document.addEventListener('keypress', e => {
       this.snake.changeDirection(e);
     });
@@ -62,6 +87,7 @@ class Game {
   gameplayLoop() {
     this.clearBoard();
     this.snake.updatePos();
+    this.snake.collisionCheck();
     this.snake.drawSnake();
     this.drawWifi();
   }
@@ -119,29 +145,22 @@ class Game {
   }
 
   /**
-   * Returns a cell at the given index
-   * @param index - index of the cell
-   */
-  getCell(index) {
-    return this.grid[index];
-  }
-
-  /**
-   * Returns a random cell
-   * @return A random cell
-   */
-  getRandomCell() {
-    return this.grid[Math.floor(Math.random() * this.grid.length)];
-  }
-
-  /**
    * Returns a random empty cell
    * @return An empty cell
    */ 
   getRandomEmptyCell() {
-    let cell;
-    while(!this.isCellEmpty(cell = this.getRandomCell())) {}
-    return cell;
+    let cell, x, y;
+
+    // look for an empty cell
+    while(true) {
+      x = Math.floor(Math.random() * this.width);
+      y = Math.floor(Math.random() * this.height);
+      cell = this.getCell(x, y);
+
+      // found it!
+      if(this.isCellEmpty(cell)) break;
+    }
+    return new Point2D(x, y);
   }
 
   /**
@@ -157,28 +176,23 @@ class Game {
    */ 
   spawnWifi() {
     this.wifiCell = this.getRandomEmptyCell();
+    console.log(this.wifiCell);
   }
 
   /**
    * Draw wifi
    */
   drawWifi() {
-    this.wifiCell.innerText = 'W';
+    let cell = this.getCell(this.wifiCell.x, this.wifiCell.y);
+    cell.innerText = 'W';
   }
-}
 
-/**
- * A point in 2D space
- */ 
-class Point2D {
   /**
-   * Creates a point at the given coords
-   * @param x - the x coord
-   * @param y - the y coord
-   */ 
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
+   * Get the WiFi cell
+   * @return the WiFi cell
+   */
+  getWifi() {
+    return this.wifiCell;
   }
 }
 
@@ -194,7 +208,7 @@ class Snake {
     // body of the snake with the head in the center
     this.body = [new Point2D(this.board.width / 2, this.board.height / 2)];
 
-    // direction the snake can travel in
+    // directions the snake can travel in
     this.directions = {
       LEFT: 0,
       RIGHT: 1,
@@ -266,6 +280,24 @@ class Snake {
       case 'd':
         this.curDir = this.directions.RIGHT;
         break;
+    }
+  }
+
+  /**
+   * Check if the snake collided with anything
+   */
+  collisionCheck() {
+    // check for wall collision
+    if (this.body[0].x < 0 ||
+        this.body[0].x >= this.board.width ||
+        this.body[0].y < 0 ||
+        this.body[0].y >= this.board.height) {
+      alert('game over!');
+    }
+
+    // check for wifi
+    if(this.board.getWifi().isEqual(this.body[0])) {
+      this.board.spawnWifi();
     }
   }
 }
