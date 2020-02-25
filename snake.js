@@ -16,6 +16,12 @@ class Game {
     // array holding the grid
     this.grid = [];
 
+    // the snake itself
+    this.snake = new Snake(this);
+
+    // cell with the wifi symbol
+    this.wifiCell;
+
     // initialize the game
     this.init();
 
@@ -29,6 +35,16 @@ class Game {
   init() {
     this.createBoard(this.width, this.height);
     this.spawnWifi();
+    this.setupListeners();
+  }
+
+  /**
+   * Setup event listeners for controls
+   */ 
+  setupListeners() {
+    document.addEventListener('keypress', e => {
+      this.snake.changeDirection(e);
+    });
   }
 
   /**
@@ -45,7 +61,9 @@ class Game {
    */
   gameplayLoop() {
     this.clearBoard();
-    this.spawnWifi();
+    this.snake.updatePos();
+    this.snake.drawSnake();
+    this.drawWifi();
   }
 
   /**
@@ -93,9 +111,19 @@ class Game {
 
   /**
    * Returns the cell at the given x and y position
+   * @param x - the x position of the cell
+   * @param y - the y position of the cell
    */ 
   getCell(x, y) {
     return this.grid[x + this.width * y];
+  }
+
+  /**
+   * Returns a cell at the given index
+   * @param index - index of the cell
+   */
+  getCell(index) {
+    return this.grid[index];
   }
 
   /**
@@ -104,6 +132,16 @@ class Game {
    */
   getRandomCell() {
     return this.grid[Math.floor(Math.random() * this.grid.length)];
+  }
+
+  /**
+   * Returns a random empty cell
+   * @return An empty cell
+   */ 
+  getRandomEmptyCell() {
+    let cell;
+    while(!this.isCellEmpty(cell = this.getRandomCell())) {}
+    return cell;
   }
 
   /**
@@ -118,15 +156,118 @@ class Game {
    * Randomly spawns a wifi signal in a free spot
    */ 
   spawnWifi() {
-    let cell;
-    while(!this.isCellEmpty(cell = this.getRandomCell())) {}
-    cell.innerText = 'W';
+    this.wifiCell = this.getRandomEmptyCell();
+  }
+
+  /**
+   * Draw wifi
+   */
+  drawWifi() {
+    this.wifiCell.innerText = 'W';
+  }
+}
+
+/**
+ * A point in 2D space
+ */ 
+class Point2D {
+  /**
+   * Creates a point at the given coords
+   * @param x - the x coord
+   * @param y - the y coord
+   */ 
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
   }
 }
 
 /* The snake itself */
 class Snake {
-  constructor() {}
+  /**
+   * Construct a new snake
+   */ 
+  constructor(board) {
+    // reference to the board itself
+    this.board = board;
+
+    // body of the snake with the head in the center
+    this.body = [new Point2D(this.board.width / 2, this.board.height / 2)];
+
+    // direction the snake can travel in
+    this.directions = {
+      LEFT: 0,
+      RIGHT: 1,
+      UP: 2,
+      DOWN: 3
+    };
+
+    // the current direction the snake is traveling in
+    this.curDir = this.directions.RIGHT;
+  }
+
+  /**
+   * Adds a cell to the snake's body
+   * @param cell - the cell to add to the snake
+   */
+  addCell() {
+    //
+  }
+
+  /**
+   * Updates the snakes position
+   */ 
+  updatePos() {
+    switch(this.curDir) {
+      case this.directions.LEFT:
+        this.body[0].x--
+        break;
+
+      case this.directions.RIGHT:
+        this.body[0].x++;
+        break;
+
+      case this.directions.UP:
+        this.body[0].y--;
+        break;
+
+      case this.directions.DOWN:
+        this.body[0].y++;
+        break;
+    }
+  }
+
+  /**
+   * Draw the body
+   */
+  drawSnake() {
+    this.body.forEach(point => {
+      this.board.setCell(point.x, point.y, '4');
+    });
+  }
+
+  /**
+   * Change the snake's direction
+   */
+  changeDirection(keyEvent) {
+    switch(keyEvent.key) {
+      case 'w':
+        this.curDir = this.directions.UP;
+        break;
+
+      case 'a':
+        this.curDir = this.directions.LEFT;
+        break;
+
+      case 's':
+        this.curDir = this.directions.DOWN;
+        break;
+
+      case 'd':
+        this.curDir = this.directions.RIGHT;
+        break;
+    }
+  }
 }
 
 // start the game with a 16 by 16 square grid
