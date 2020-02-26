@@ -66,8 +66,8 @@ class Game {
    * Setup event listeners for controls
    */ 
   setupListeners() {
-    // update snake's direction based on keypress
-    document.addEventListener('keypress', e => {
+    // update snake's direction based on keydown
+    document.addEventListener('keydown', e => {
       this.snake.changeDirection(e);
     });
   }
@@ -206,11 +206,11 @@ class Snake {
     this.board = board;
 
     // body of the snake with the head in the center
-    this.body = [new Point2D(this.board.width / 2, this.board.height / 2)];
+    let midX = this.board.width / 2,
+        midY = this.board.height / 2;
 
-    // TODO: testing growing body
-    this.body.push(new Point2D(7, 8),
-                   new Point2D(6, 8));
+    // create head and tail
+    this.body = [new Point2D(midX, midY), new Point2D(midX - 1, midY)];
 
     // directions the snake can travel in
     this.directions = {
@@ -218,6 +218,19 @@ class Snake {
       RIGHT: 1,
       UP: 2,
       DOWN: 3
+    };
+
+    // key mapping
+    // TODO: clean this
+    this.keyMap = {
+      'ArrowLeft': this.directions.LEFT,
+      'a': this.directions.LEFT,
+      'ArrowRight': this.directions.RIGHT,
+      'd': this.directions.RIGHT,
+      'ArrowUp': this.directions.UP,
+      'w': this.directions.UP,
+      'ArrowDown': this.directions.DOWN,
+      's': this.directions.DOWN
     };
 
     // the current direction the snake is traveling in
@@ -268,15 +281,6 @@ class Snake {
   }
 
   /**
-   * Removes the tail from the snake and returns it
-   *
-   * @return Tail of the snake
-   */
-  popTail() {
-    this.body.pop();
-  }
-
-  /**
    * Swaps the tail to the front of the array
    */
   swapTailToFront() {
@@ -294,19 +298,19 @@ class Snake {
 
     switch(this.curDir) {
       case this.directions.LEFT:
-        this.body[0].x--;
+        this.head.x--;
         break;
 
       case this.directions.RIGHT:
-        this.body[0].x++;
+        this.head.x++;
         break;
 
       case this.directions.UP:
-        this.body[0].y--;
+        this.head.y--;
         break;
 
       case this.directions.DOWN:
-        this.body[0].y++;
+        this.head.y++;
         break;
     }
   }
@@ -326,23 +330,13 @@ class Snake {
    * Change the snake's direction
    */
   changeDirection(keyEvent) {
-    switch(keyEvent.key) {
-      case 'w':
-        this.curDir = this.directions.UP;
-        break;
+    let dir = this.keyMap[keyEvent.key];
 
-      case 'a':
-        this.curDir = this.directions.LEFT;
-        break;
+    // prevent the snake from moving back into its body
+    if (dir + this.curDir === this.directions.LEFT + this.directions.RIGHT ||
+        dir + this.curDir === this.directions.UP + this.directions.DOWN) return;
 
-      case 's':
-        this.curDir = this.directions.DOWN;
-        break;
-
-      case 'd':
-        this.curDir = this.directions.RIGHT;
-        break;
-    }
+    this.curDir = dir;
   }
 
   /**
