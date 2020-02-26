@@ -213,7 +213,7 @@ body, html {
 
 .grid-item {
   font-size: 2em;
-  border: 1px solid var(--darkest-green-color);
+  /*border: 1px solid var(--darkest-green-color);*/
   text-align: center;
   width: 100%;
   height: 0;

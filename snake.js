@@ -32,7 +32,7 @@ class Game {
   constructor(width, height) {
     this.width = width;   // width of board
     this.height = height; // height of board
-    this.tickRate = 500;  // time between game ticks in milliseconds
+    this.tickRate = 250;  // time between game ticks in milliseconds
 
     // reference to gameboard element
     this.gameboard = document.getElementById('gameboard');
@@ -85,10 +85,15 @@ class Game {
    * The all mighty game play loop!
    */
   gameplayLoop() {
+    // wipe the board
     this.clearBoard();
+
+    // update the snake
     this.snake.updatePos();
     this.snake.collisionCheck();
     this.snake.drawSnake();
+
+    // draw wifi
     this.drawWifi();
   }
 
@@ -122,49 +127,50 @@ class Game {
   };
 
   /**
-   * Set given cell
-   * reverse is:
-   * x = i % width
-   * y = i / width
+   * Set the text of the given cell
    *
-   * @param x - the x position of the cell
-   * @param y - the y position of the cell
+   * @param point - the x and y position of the cell
    * @param symbol - the new text to set
    */ 
-  setCell(x, y, symbol) {
-    this.grid[x + this.width * y].innerText = symbol;
+  setCell(point, symbol) {
+    this.grid[point.x + this.width * point.y].innerText = symbol;
   }
 
   /**
    * Returns the cell at the given x and y position
-   * @param x - the x position of the cell
-   * @param y - the y position of the cell
+   *
+   * @param point - the x and y position of the cell to get
    */ 
-  getCell(x, y) {
-    return this.grid[x + this.width * y];
+  getCell(point) {
+    return this.grid[point.x + this.width * point.y];
   }
 
   /**
    * Returns a random empty cell
+   *
    * @return An empty cell
    */ 
   getRandomEmptyCell() {
-    let cell, x, y;
+    // TODO: we don't need the point. Make it simpler
+    let cell,
+        point = new Point2D(0,0);
 
     // look for an empty cell
     while(true) {
-      x = Math.floor(Math.random() * this.width);
-      y = Math.floor(Math.random() * this.height);
-      cell = this.getCell(x, y);
+      point.x = Math.floor(Math.random() * this.width);
+      point.y = Math.floor(Math.random() * this.height);
+
+      cell = this.getCell(point);
 
       // found it!
       if(this.isCellEmpty(cell)) break;
     }
-    return new Point2D(x, y);
+    return point;
   }
 
   /**
-   * Checks if the cell is empty
+   * Checks if the cell has no inner text
+   *
    * @return true if the cell is empty. False otherwise
    */
   isCellEmpty(cell) {
@@ -172,23 +178,22 @@ class Game {
   }
 
   /**
-   * Randomly spawns a wifi signal in a free spot
+   * Randomly spawns a WiFi signal in a free spot
    */ 
   spawnWifi() {
     this.wifiCell = this.getRandomEmptyCell();
-    console.log(this.wifiCell);
   }
 
   /**
    * Draw wifi
    */
   drawWifi() {
-    let cell = this.getCell(this.wifiCell.x, this.wifiCell.y);
-    cell.innerText = 'W';
+    this.getCell(this.wifiCell).innerText = 'W';
   }
 
   /**
    * Get the WiFi cell
+   *
    * @return the WiFi cell
    */
   getWifi() {
@@ -208,6 +213,10 @@ class Snake {
     // body of the snake with the head in the center
     this.body = [new Point2D(this.board.width / 2, this.board.height / 2)];
 
+    // TODO: testing growing body
+    this.body.push(new Point2D(7, 8),
+                   new Point2D(6, 8));
+
     // directions the snake can travel in
     this.directions = {
       LEFT: 0,
@@ -221,20 +230,76 @@ class Snake {
   }
 
   /**
-   * Adds a cell to the snake's body
-   * @param cell - the cell to add to the snake
+   * Grow the snake
    */
-  addCell() {
-    //
+  growBody() {
+    this.body.push(new Point2D(this.head.x, this.head.y));
+  }
+
+  /**
+   * Gets the head of the snake
+   *
+   * @return head of the snake
+   */ 
+  get head() {
+    return this.body[0];
+  }
+
+  /**
+   * Set the head of the snake
+   *
+   * @param newHead - the new head of the snake
+   */ 
+  set head(newHead) {
+    this.body[0] = newHead;
+  }
+
+  /**
+   * Gets the tail of the snake
+   *
+   * @return tail of the snake
+   */ 
+  get tail() {
+    return this.body[this.body.length - 1];
+  }
+
+  /**
+   * Set the tail of the snake
+   *
+   * @param newTail - the new tail of the snake
+   */ 
+  set tail(newTail) {
+    this.body[this.body.length - 1] = newTail;
+  }
+
+  /**
+   * Removes the tail from the snake and returns it
+   *
+   * @return Tail of the snake
+   */
+  popTail() {
+    this.body.pop();
+  }
+
+  /**
+   * Swaps the tail to the front of the array
+   */
+  swapTailToFront() {
+    let tail = this.body.pop();
+    tail.x = this.head.x;
+    tail.y = this.head.y;
+    this.body.unshift(tail);
   }
 
   /**
    * Updates the snakes position
    */ 
   updatePos() {
+    this.swapTailToFront();
+
     switch(this.curDir) {
       case this.directions.LEFT:
-        this.body[0].x--
+        this.body[0].x--;
         break;
 
       case this.directions.RIGHT:
@@ -255,9 +320,11 @@ class Snake {
    * Draw the body
    */
   drawSnake() {
-    this.body.forEach(point => {
-      this.board.setCell(point.x, point.y, '4');
+    this.body.forEach((point, index) => {
+      this.board.setCell(point, index % 2 === 0 ? '0' : '4');
     });
+
+    this.board.setCell(this.head, '#');
   }
 
   /**
@@ -292,11 +359,15 @@ class Snake {
         this.body[0].x >= this.board.width ||
         this.body[0].y < 0 ||
         this.body[0].y >= this.board.height) {
-      alert('game over!');
+      console.log('game over!');
     }
+
+    // check for body collision
+    /* TODO: add body checking code */
 
     // check for wifi
     if(this.board.getWifi().isEqual(this.body[0])) {
+      this.growBody();
       this.board.spawnWifi();
     }
   }
