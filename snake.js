@@ -30,9 +30,9 @@ class Game {
    * @param height - height of the gameboard
    */
   constructor(width, height) {
-    this.width = width;   // width of board
-    this.height = height; // height of board
-    this.tickRate = 250;  // time between game ticks in milliseconds
+    this.width    = width;  // width of board
+    this.height   = height; // height of board
+    this.tickRate = 250;    // time between game ticks in milliseconds
 
     // reference to gameboard element
     this.gameboard = document.getElementById('gameboard');
@@ -90,8 +90,8 @@ class Game {
 
     // update the snake
     this.snake.updatePos();
-    this.snake.collisionCheck();
     this.snake.drawSnake();
+    this.snake.collisionCheck();
   }
 
   /**
@@ -221,16 +221,15 @@ class Snake {
     };
 
     // key mapping
-    // TODO: clean this
     this.keyMap = {
-      'ArrowLeft': this.directions.LEFT,
-      'a': this.directions.LEFT,
+      'ArrowLeft':  this.directions.LEFT,
       'ArrowRight': this.directions.RIGHT,
-      'd': this.directions.RIGHT,
-      'ArrowUp': this.directions.UP,
-      'w': this.directions.UP,
-      'ArrowDown': this.directions.DOWN,
-      's': this.directions.DOWN
+      'ArrowUp':    this.directions.UP,
+      'ArrowDown':  this.directions.DOWN,
+      'a':          this.directions.LEFT,
+      'd':          this.directions.RIGHT,
+      'w':          this.directions.UP,
+      's':          this.directions.DOWN
     };
 
     // the current direction the snake is traveling in
@@ -296,23 +295,11 @@ class Snake {
   updatePos() {
     this.swapTailToFront();
 
-    switch(this.curDir) {
-      case this.directions.LEFT:
-        this.head.x--;
-        break;
-
-      case this.directions.RIGHT:
-        this.head.x++;
-        break;
-
-      case this.directions.UP:
-        this.head.y--;
-        break;
-
-      case this.directions.DOWN:
-        this.head.y++;
-        break;
-    }
+    // move the head based on the current moving direction
+    if     (this.curDir === this.directions.LEFT)  this.head.x--;
+    else if(this.curDir === this.directions.RIGHT) this.head.x++;
+    else if(this.curDir === this.directions.UP)    this.head.y--;
+    else                                           this.head.y++;
   }
 
   /**
@@ -323,6 +310,7 @@ class Snake {
       this.board.setCell(point, index % 2 === 0 ? '0' : '4');
     });
 
+    // make the head with #
     this.board.setCell(this.head, '#');
   }
 
@@ -343,18 +331,36 @@ class Snake {
    * Check if the snake collided with anything
    */
   collisionCheck() {
-    // check for wall collision
-    if (this.body[0].x < 0 ||
-        this.body[0].x >= this.board.width ||
-        this.body[0].y < 0 ||
-        this.body[0].y >= this.board.height) {
+    this.wallCheck();
+    this.bodyCheck();
+    this.wifiCheck();
+  }
+
+  /**
+   * Check for wall collisions
+   */
+  wallCheck() {
+    if (this.body[0].x < 0 || this.body[0].x >= this.board.width ||
+        this.body[0].y < 0 || this.body[0].y >= this.board.height) {
       console.log('game over!');
     }
+  }
 
-    // check for body collision
-    /* TODO: add body checking code */
+  /**
+   * Check if the snake ran into its own body
+   */
+  bodyCheck() {
+    this.body.forEach((point, index) => {
+      if(point.isEqual(this.head) && index !== 0) {
+        console.log('game over from body!');
+      }
+    });
+  }
 
-    // check for wifi
+  /**
+   * Check if the snake hit a wifi signal
+   */ 
+  wifiCheck() {
     if(this.board.getWifi().isEqual(this.body[0])) {
       this.growBody();
       this.board.spawnWifi();
