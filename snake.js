@@ -92,9 +92,6 @@ class Game {
     this.snake.updatePos();
     this.snake.collisionCheck();
     this.snake.drawSnake();
-
-    // draw wifi
-    this.drawWifi();
   }
 
   /**
@@ -181,14 +178,12 @@ class Game {
    * Randomly spawns a WiFi signal in a free spot
    */ 
   spawnWifi() {
-    this.wifiCell = this.getRandomEmptyCell();
-  }
+    if(this.wifiCell) {
+      this.getCell(this.wifiCell).classList.remove('wifi-svg');
+    }
 
-  /**
-   * Draw wifi
-   */
-  drawWifi() {
-    this.getCell(this.wifiCell).innerText = 'W';
+    this.wifiCell = this.getRandomEmptyCell();
+    this.getCell(this.wifiCell).classList.add('wifi-svg');
   }
 
   /**
