@@ -66,6 +66,22 @@
   transform: translate(-50%, -25%);
 }
 
+#controls-text h1 {
+  font-size: 4em;
+}
+
+#controls-text h2 {
+  font-size: 3em;
+}
+
+#keys {
+  display: inline-flex;
+}
+
+#keys h2 {
+  margin: 0;
+}
+
 /* Buttons Container Related */
 #buttons-container {
   background-color: var(--light-green-color);
