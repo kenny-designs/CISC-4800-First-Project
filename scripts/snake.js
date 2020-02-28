@@ -1,9 +1,52 @@
 /**
+ * Manages showing the user their score
+ */ 
+class Scoreboard {
+  /** Creates a new Scoreboard */
+  constructor() {
+    // the current score
+    this.score = 0;
+
+    // reference to the scoreboard
+    this.scoreboard = document.getElementById('scoreboard');
+
+    // update scoreboard for the first time
+    this.updateScoreboard();
+  }
+
+  /**
+   * Increment the play's score by the given number of points
+   *
+   * @param points - the points to add
+   */ 
+  increaseScore(points) {
+    this.score += points;
+    this.updateScoreboard();
+  }
+
+  /**
+   * Updates the scoreboard with the current score
+   */ 
+  updateScoreboard() {
+    this.scoreboard.innerHTML = this.score;
+  }
+
+  /**
+   * Resets the score
+   */
+  resetScore() {
+    this.score = 0;
+    this.updateScoreboard();
+  }
+}
+
+/**
  * A point in 2D space
  */ 
 class Point2D {
   /**
    * Creates a point at the given coords
+   *
    * @param x - the x coord
    * @param y - the y coord
    */ 
@@ -35,20 +78,16 @@ class Game {
     this.tickRate   = 250;    // time between game ticks in milliseconds
     this.isGameover = false;  // track if the player lost
     this.intervalID = null;   // ID for the interval driving the game loop
+    this.scoreboard = null;   // reference to the scoreboard object
+    this.snake      = null;   // reference to the snake object
+    this.grid       = [];     // array holding the grid
+    this.wifiCell   = null;   // cell with the wifi symbol
+    this.wifiPoints = 100;    // wifi is worth 100 points each
 
     // get references to DOM elements
     this.gameboard      = document.getElementById('gameboard');
     this.restartButton  = document.getElementById('restart-button');
     this.gameOverScreen = document.getElementById('game-over-screen');
-
-    // array holding the grid
-    this.grid = [];
-
-    // the snake itself
-    this.snake = new Snake(this);
-
-    // cell with the wifi symbol
-    this.wifiCell;
 
     // initialize the game
     this.init();
@@ -61,8 +100,13 @@ class Game {
    * Initialize the game
    */
   init() {
-    this.createBoard(this.width, this.height);
+    // create game objects
+    this.scoreboard = new Scoreboard();
+    this.snake      = new Snake(this);
+
+    // setup controls and the board
     this.setupListeners();
+    this.createBoard(this.width, this.height);
     this.snake.createSnake();
     this.spawnWifi();
   }
@@ -94,6 +138,7 @@ class Game {
    */
   restartGame(e) {
     this.gameOverScreen.style.display = 'none';
+    this.scoreboard.resetScore();
     this.snake.createSnake();
     this.spawnWifi();
     this.isGameover = false;
@@ -223,23 +268,28 @@ class Game {
   getWifi() {
     return this.wifiCell;
   }
+
+  /**
+   * Increase score
+   */
+  increaseScore() {
+    this.scoreboard.increaseScore(this.wifiPoints);
+  }
 }
 
 /* The snake itself */
 class Snake {
-  /**
-   * Construct a new snake
-   */ 
+  /** Construct a new snake */ 
   constructor(board) {
     this.board = board; // reference to the game board
     this.body  = [];    // array of Point2D's for the snake's body
 
     // directions the snake can travel in
     this.directions = {
-      LEFT: 0,
+      LEFT:  0,
       RIGHT: 1,
-      UP: 2,
-      DOWN: 3
+      UP:    2,
+      DOWN:  3
     };
 
     // key mapping
@@ -334,7 +384,7 @@ class Snake {
     if     (this.curDir === this.directions.LEFT)  this.head.x--;
     else if(this.curDir === this.directions.RIGHT) this.head.x++;
     else if(this.curDir === this.directions.UP)    this.head.y--;
-    else                                           this.head.y++;
+    else if(this.curDir === this.directions.DOWN)  this.head.y++;
   }
 
   /**
@@ -345,7 +395,7 @@ class Snake {
       this.board.setCell(point, index % 2 === 0 ? '0' : '4');
     });
 
-    // make the head with #
+    // represent the head with the # symbol
     this.board.setCell(this.head, '#');
   }
 
@@ -380,7 +430,6 @@ class Snake {
     if (this.body[0].x < 0 || this.body[0].x >= this.board.width ||
         this.body[0].y < 0 || this.body[0].y >= this.board.height) {
       this.board.endGame();
-      console.log('game over!');
     }
   }
 
@@ -391,7 +440,6 @@ class Snake {
     this.body.forEach((point, index) => {
       if(point.isEqual(this.head) && index !== 0) {
         this.board.endGame();
-        console.log('game over from body!');
       }
     });
   }
@@ -402,6 +450,7 @@ class Snake {
   wifiCheck() {
     if(this.board.getWifi().isEqual(this.body[0])) {
       this.growBody();
+      this.board.increaseScore();
       this.board.spawnWifi();
     }
   }

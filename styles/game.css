@@ -35,6 +35,17 @@
   background-color: var(--darkest-green-color);
 }
 
+/* Scoreboard Related */
+#scoreboard-container {
+  background-color: var(--dark-green-color);
+}
+
+#scoreboard {
+  color: var(--lightest-green-color);
+  text-align: center;
+  margin: 0;
+}
+
 /* Game Over Screen Related */
 #game-over-screen {
   width: 100%;
