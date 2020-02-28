@@ -33,6 +33,10 @@
   font-size: 1.3em;
 }
 
+#github:hover {
+  opacity: 0.75;
+}
+
 /* Title Container Related */
 #title-container {
   background-color: var(--lightest-green-color);
@@ -66,8 +70,13 @@
   transform: translate(-50%, -25%);
 }
 
+#controls-text p {
+  font-size: 1.5em;
+}
+
 #controls-text h1 {
   font-size: 4em;
+  margin-bottom: 0.1em;
 }
 
 #controls-text h2 {
