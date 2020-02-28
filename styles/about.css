@@ -52,3 +52,27 @@
 #about-container p {
   font-size: 1.75em;
 }
+
+/* Card Related */
+#card-container {
+  display: inline-flex;
+}
+
+.card {
+  margin: 3em;
+  width: 40%;
+}
+
+.card h2 {
+  font-size: 1.75em;
+  margin: 0;
+}
+
+.card p {
+  font-size: 1em;
+  margin: 0;
+}
+
+.card-text {
+  padding: 2px 16px;
+}
