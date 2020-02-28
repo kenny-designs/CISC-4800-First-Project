@@ -1,4 +1,40 @@
 /**
+ * Manage audio files
+ */ 
+class AudioManager {
+  /**
+   * Take an object with the names of sounds and their respective .wav files
+   *
+   * @param audioObject - key-value pair of audio names and their files
+   */ 
+  constructor(audioObject) {
+    this.audio = null;
+    this.loadAudio(audioObject);
+  }
+
+  /**
+   * Load all .wav files into this.audio
+   *
+   * @param audioObject - key-value pairs of sound files
+   */ 
+  loadAudio(audioObject) {
+    this.audio = {};
+    for(let ao in audioObject) {
+      this.audio[ao] = new Audio(audioObject[ao]);
+    }
+  }
+
+  /**
+   * Plays the sound associated with the given key
+   *
+   * @audioKey - key to the sound we wish to play
+   */ 
+  playAudio(audioKey) {
+    this.audio[audioKey].play();
+  }
+}
+
+/**
  * Manages showing the user their score
  */ 
 class Scoreboard {
@@ -73,16 +109,24 @@ class Game {
    * @param height - height of the gameboard
    */
   constructor(width, height) {
-    this.width      = width;  // width of board
-    this.height     = height; // height of board
-    this.tickRate   = 250;    // time between game ticks in milliseconds
-    this.isGameover = false;  // track if the player lost
-    this.intervalID = null;   // ID for the interval driving the game loop
-    this.scoreboard = null;   // reference to the scoreboard object
-    this.snake      = null;   // reference to the snake object
-    this.grid       = [];     // array holding the grid
-    this.wifiCell   = null;   // cell with the wifi symbol
-    this.wifiPoints = 100;    // wifi is worth 100 points each
+    this.width        = width;  // width of board
+    this.height       = height; // height of board
+    this.tickRate     = 250;    // time between game ticks in milliseconds
+    this.isGameover   = false;  // track if the player lost
+    this.intervalID   = null;   // ID for the interval driving the game loop
+    this.scoreboard   = null;   // reference to the scoreboard object
+    this.snake        = null;   // reference to the snake object
+    this.audioManager = null;   // object used for playing sound
+    this.grid         = [];     // array holding the grid
+    this.wifiCell     = null;   // cell with the wifi symbol
+    this.wifiPoints   = 100;    // wifi is worth 100 points each
+
+    // determine out audio files
+    this.audioObject = {
+      'SCORE':     '../audio/score.wav',
+      'DEATH':     '../audio/death.wav',
+      'HIGHSCORE': '../audio/highscore.wav'
+    };
 
     // get references to DOM elements
     this.gameboard      = document.getElementById('gameboard');
@@ -101,8 +145,9 @@ class Game {
    */
   init() {
     // create game objects
-    this.scoreboard = new Scoreboard();
-    this.snake      = new Snake(this);
+    this.scoreboard   = new Scoreboard();
+    this.snake        = new Snake(this);
+    this.audioManager = new AudioManager(this.audioObject);
 
     // setup controls and the board
     this.setupListeners();
@@ -166,6 +211,7 @@ class Game {
   endGame() {
     this.isGameover = true;
     this.gameOverScreen.style.display = 'block';
+    this.audioManager.playAudio('DEATH');
   }
 
   /**
@@ -273,6 +319,7 @@ class Game {
    * Increase score
    */
   increaseScore() {
+    this.audioManager.playAudio('SCORE');
     this.scoreboard.increaseScore(this.wifiPoints);
   }
 }
