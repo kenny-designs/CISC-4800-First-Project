@@ -1,0 +1,101 @@
+/* INDEX.HTML STYLES */
+
+/* ANIMATIONS AND TRANSITIONS */
+.fade-in {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 1s linear;
+}
+
+.fade-out {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 1s, opacity 1s linear;
+}
+
+/* Top Left Container related */
+#top-left-container {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  font-size: 1.3em;
+}
+
+#top-left-container p {
+  margin: 0;
+}
+
+/* Top Right Container related */
+#top-right-container {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  font-size: 1.3em;
+}
+
+/* Title Container Related */
+#title-container {
+  background-color: var(--lightest-green-color);
+  height: 75%; 
+}
+
+#title-text {
+  text-align: center;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+}
+
+#title-text h1 {
+  font-size: 5em;
+  font-style: italic;
+  text-decoration: underline;
+}
+
+#title-text h2 {
+  font-size: 3em;
+}
+
+/* Controls Text Related */
+#controls-text {
+  text-align: center;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+}
+
+/* Buttons Container Related */
+#buttons-container {
+  background-color: var(--light-green-color);
+  height: 25%
+}
+
+#buttons-center {
+  display: flex;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pixel-button {
+  flex: 1 1 0;
+  margin: auto 5vw;
+  padding: 1vw;
+  background-color: var(--dark-green-color);
+  color: var(--darkest-green-color);
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 3em;
+  cursor: pointer;
+}
+
+.pixel-button:hover {
+  background-color: var(--darkest-green-color);
+  color: var(--lightest-green-color);
+}
+

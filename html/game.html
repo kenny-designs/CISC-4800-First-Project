@@ -6,16 +6,23 @@
   <title>Snake the Game!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="./style.css">
+  <link rel="stylesheet" type="text/css" href="../styles/global.css">
+  <link rel="stylesheet" type="text/css" href="../styles/game.css">
 </head>
 
 <body id="snake-page">
   <div id="gameboard-container">
+    <div id="game-over-screen">
+      <h1>GAME OVER!</h1>
+      <div id="restart-button" class="pixel-button">Restart</div>
+      <a href="../index.html" class="pixel-button">Quit</a>
+    </div>
+
     <div id="gameboard"></div>
   </div>
 
   <!-- Include JavaScript -->
-  <script src="./snake.js"></script>
+  <script src="../scripts/snake.js"></script>
 </body>
 
 </html>

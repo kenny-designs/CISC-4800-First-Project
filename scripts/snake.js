@@ -30,12 +30,16 @@ class Game {
    * @param height - height of the gameboard
    */
   constructor(width, height) {
-    this.width    = width;  // width of board
-    this.height   = height; // height of board
-    this.tickRate = 250;    // time between game ticks in milliseconds
+    this.width      = width;  // width of board
+    this.height     = height; // height of board
+    this.tickRate   = 250;    // time between game ticks in milliseconds
+    this.isGameover = false;  // track if the player lost
+    this.intervalID = null;   // ID for the interval driving the game loop
 
-    // reference to gameboard element
-    this.gameboard = document.getElementById('gameboard');
+    // get references to DOM elements
+    this.gameboard      = document.getElementById('gameboard');
+    this.restartButton  = document.getElementById('restart-button');
+    this.gameOverScreen = document.getElementById('game-over-screen');
 
     // array holding the grid
     this.grid = [];
@@ -54,12 +58,13 @@ class Game {
   }
 
   /**
-   * Initializes the gameboard
+   * Initialize the game
    */
   init() {
     this.createBoard(this.width, this.height);
-    this.spawnWifi();
     this.setupListeners();
+    this.snake.createSnake();
+    this.spawnWifi();
   }
 
   /**
@@ -70,28 +75,52 @@ class Game {
     document.addEventListener('keydown', e => {
       this.snake.changeDirection(e);
     });
+
+    // listener for restarting the game
+    this.restartButton.addEventListener('click', this.restartGame.bind(this));
   }
 
   /**
    * Begin the main gameplay loop
    */ 
   beginGame() {
-    window.setInterval(() => {
+    this.intervalID = window.setInterval(() => {
       this.gameplayLoop();
     }, this.tickRate);
+  }
+
+  /**
+   * Restarts the game
+   */
+  restartGame(e) {
+    this.gameOverScreen.style.display = 'none';
+    this.snake.createSnake();
+    this.spawnWifi();
+    this.isGameover = false;
   }
 
   /**
    * The all mighty game play loop!
    */
   gameplayLoop() {
+    // do nothing if the game is over
+    if(this.isGameover) return;
+
     // wipe the board
     this.clearBoard();
 
     // update the snake
-    this.snake.updatePos();
     this.snake.drawSnake();
+    this.snake.updatePos();
     this.snake.collisionCheck();
+  }
+
+  /**
+   * End the game
+   */ 
+  endGame() {
+    this.isGameover = true;
+    this.gameOverScreen.style.display = 'block';
   }
 
   /**
@@ -202,15 +231,8 @@ class Snake {
    * Construct a new snake
    */ 
   constructor(board) {
-    // reference to the board itself
-    this.board = board;
-
-    // body of the snake with the head in the center
-    let midX = this.board.width / 2,
-        midY = this.board.height / 2;
-
-    // create head and tail
-    this.body = [new Point2D(midX, midY), new Point2D(midX - 1, midY)];
+    this.board = board; // reference to the game board
+    this.body  = [];    // array of Point2D's for the snake's body
 
     // directions the snake can travel in
     this.directions = {
@@ -221,6 +243,7 @@ class Snake {
     };
 
     // key mapping
+    // TODO: look into an array of dictionaries/maps
     this.keyMap = {
       'ArrowLeft':  this.directions.LEFT,
       'ArrowRight': this.directions.RIGHT,
@@ -231,6 +254,18 @@ class Snake {
       'w':          this.directions.UP,
       's':          this.directions.DOWN
     };
+  }
+
+  /**
+   * Create a new snake in the middle of the screen with default settings
+   */ 
+  createSnake() {
+    // body of the snake with the head in the center
+    let midX = this.board.width / 2,
+        midY = this.board.height / 2;
+
+    // create head and tail
+    this.body = [new Point2D(midX, midY), new Point2D(midX - 1, midY)];
 
     // the current direction the snake is traveling in
     this.curDir = this.directions.RIGHT;
@@ -318,6 +353,8 @@ class Snake {
    * Change the snake's direction
    */
   changeDirection(keyEvent) {
+    // TODO: sanitize input
+
     let dir = this.keyMap[keyEvent.key];
 
     // prevent the snake from moving back into its body
@@ -342,6 +379,7 @@ class Snake {
   wallCheck() {
     if (this.body[0].x < 0 || this.body[0].x >= this.board.width ||
         this.body[0].y < 0 || this.body[0].y >= this.board.height) {
+      this.board.endGame();
       console.log('game over!');
     }
   }
@@ -352,6 +390,7 @@ class Snake {
   bodyCheck() {
     this.body.forEach((point, index) => {
       if(point.isEqual(this.head) && index !== 0) {
+        this.board.endGame();
         console.log('game over from body!');
       }
     });
