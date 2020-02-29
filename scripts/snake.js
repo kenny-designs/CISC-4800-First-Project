@@ -200,8 +200,8 @@ class Game {
     this.clearBoard();
 
     // update the snake
-    this.snake.drawSnake();
     this.snake.updatePos();
+    this.snake.drawSnake();
     this.snake.collisionCheck();
   }
 
@@ -250,7 +250,13 @@ class Game {
    * @param symbol - the new text to set
    */ 
   setCell(point, symbol) {
-    this.grid[point.x + this.width * point.y].innerText = symbol;
+    // get the index the cell is at
+    let index = point.x + this.width * point.y;
+
+    // return if out of bounds
+    if(index < 0 || index >= this.grid.length) return;
+
+    this.grid[index].innerText = symbol;
   }
 
   /**
@@ -259,18 +265,22 @@ class Game {
    * @param point - the x and y position of the cell to get
    */ 
   getCell(point) {
-    return this.grid[point.x + this.width * point.y];
+    // get the index the cell is at
+    let index = point.x + this.width * point.y;
+
+    // return if out of bounds
+    if(index < 0 || index >= this.grid.length) return null;
+
+    return this.grid[index];
   }
 
   /**
    * Returns a random empty cell
    *
-   * @return An empty cell
+   * @return An empty cell as a Point2D
    */ 
   getRandomEmptyCell() {
-    // TODO: we don't need the point. Make it simpler
-    let cell,
-        point = new Point2D(0,0);
+    let cell, point = new Point2D(0,0);
 
     // look for an empty cell
     while(true) {
@@ -328,8 +338,10 @@ class Game {
 class Snake {
   /** Construct a new snake */ 
   constructor(board) {
-    this.board = board; // reference to the game board
-    this.body  = [];    // array of Point2D's for the snake's body
+    this.board    = board; // reference to the game board
+    this.body     = [];    // array of Point2D's for the snake's body
+    this.curDir   = null;  // the direction the snake is currently moving in
+    this.isDirSet = false; // tracks whether or not a direction was set this tick
 
     // directions the snake can travel in
     this.directions = {
@@ -432,6 +444,9 @@ class Snake {
     else if(this.curDir === this.directions.RIGHT) this.head.x++;
     else if(this.curDir === this.directions.UP)    this.head.y--;
     else if(this.curDir === this.directions.DOWN)  this.head.y++;
+
+    // the snake moved, reset direction
+    this.isDirSet = false;
   }
 
   /**
@@ -450,14 +465,19 @@ class Snake {
    * Change the snake's direction
    */
   changeDirection(keyEvent) {
-    // TODO: sanitize input
+    // return if the player already chosen a direction for this tick
+    if(this.isDirSet) return;
 
     let dir = this.keyMap[keyEvent.key];
+
+    // if bad input, return
+    if (typeof dir === 'undefined') return;
 
     // prevent the snake from moving back into its body
     if (dir + this.curDir === this.directions.LEFT + this.directions.RIGHT ||
         dir + this.curDir === this.directions.UP + this.directions.DOWN) return;
 
+    this.isDirSet = true;
     this.curDir = dir;
   }
 

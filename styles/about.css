@@ -61,6 +61,7 @@
 .card {
   margin: 3em;
   width: 40%;
+  background-color: var(--light-green-color);
 }
 
 .card h2 {
