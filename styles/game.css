@@ -38,13 +38,23 @@
 /* Scoreboard Related */
 #scoreboard-container {
   background-color: var(--dark-green-color);
+  color: var(--lightest-green-color);
+}
+
+#scoreboard-container h1 {
+  display: inline-block;
+  font-size: 2.5em;
 }
 
 #scoreboard {
-  color: var(--lightest-green-color);
   text-align: right;
   margin: 0 0.5em 0 0;
-  font-size: 3em;
+  float: right;
+}
+
+#highscore-board {
+  text-align: left;
+  margin: 0 0 0 0.5em;
 }
 
 /* Game Over Screen Related */

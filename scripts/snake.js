@@ -40,14 +40,16 @@ class AudioManager {
 class Scoreboard {
   /** Creates a new Scoreboard */
   constructor() {
-    // the current score
-    this.score = 0;
+    this.score     = 0;
+    this.highscore = parseInt(localStorage['highscore'] || 0);
 
-    // reference to the scoreboard
-    this.scoreboard = document.getElementById('scoreboard');
+    // reference to the scoreboards
+    this.scoreboard     = document.getElementById('scoreboard');
+    this.highscoreBoard = document.getElementById('highscore-board');
 
-    // update scoreboard for the first time
+    // update both scoreboard
     this.updateScoreboard();
+    this.updateHighscore();
   }
 
   /**
@@ -57,7 +59,21 @@ class Scoreboard {
    */ 
   increaseScore(points) {
     this.score += points;
+
+    if(this.score > this.highscore) {
+      this.highscore = this.score;
+      this.updateHighscore();
+    }
+
     this.updateScoreboard();
+  }
+
+  /**
+   * Updates the highscore with the current one
+   */ 
+  updateHighscore() {
+    localStorage['highscore']     = this.highscore;
+    this.highscoreBoard.innerHTML = 'Hi ' + this.highscore;
   }
 
   /**
@@ -120,6 +136,7 @@ class Game {
     this.grid         = [];     // array holding the grid
     this.wifiCell     = null;   // cell with the wifi symbol
     this.wifiPoints   = 100;    // wifi is worth 100 points each
+    this.isNewHigh    = false;  // did we get a new high score this match
 
     // determine out audio files
     this.audioObject = {
@@ -187,6 +204,7 @@ class Game {
     this.snake.createSnake();
     this.spawnWifi();
     this.isGameover = false;
+    this.isNewHigh  = false;
   }
 
   /**
@@ -329,8 +347,14 @@ class Game {
    * Increase score
    */
   increaseScore() {
-    this.audioManager.playAudio('SCORE');
+    if(this.scoreboard.score + this.wifiPoints > this.scoreboard.highscore &&
+      !this.isNewHigh) {
+      this.isNewHigh = true;
+      this.audioManager.playAudio('HIGHSCORE');
+    }
+
     this.scoreboard.increaseScore(this.wifiPoints);
+    this.audioManager.playAudio('SCORE');
   }
 }
 
