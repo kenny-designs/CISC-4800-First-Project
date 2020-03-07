@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
     <meta charset="UTF-8">
     <title>About</title>
@@ -9,12 +8,19 @@
     <link href="https://fonts.googleapis.com/css?family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../styles/global.css">
     <link rel="stylesheet" type="text/css" href="../styles/about.css">
+
+    <style>
+      #reasons-list {
+        font-size: 2em;
+      }
+    </style>
   </head>
 
   <body data-simplebar>
     <div id="snake-sidebar-container">
       <a href="../index.html">Return Home</a>
-      <p>404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 404 </p>
+      <!-- Uses JavaScript to repeat 404 text -->
+      <p id="error-text"></p>
     </div>
 
     <div id="about-container">
@@ -133,6 +139,7 @@
       played offline in our own browsers? Shhh! Don't answer. There is a solution
       and that solution is <a href="./game.html"><em>Snake: WiFi Edition</em></a>!
       <br><br>
+
       &emsp;We all deserve the best offline browser gaming experience we can
       muster and <em>Snake: WiFi Edition</em> is just the game for that. Our
       engineers (me) have worked moderately hard to provide you with a game
@@ -141,9 +148,27 @@
       down, search for <em>Snake: WiFi Edition</em> and give it a play! That is,
       when your WiFi is back up... We're working on that part.
       </p>
+
+      <h1>Additional Reasons to play Snake: WiFi Edition</h1>
+      <ul id="reasons-list">
+        <li>Snake is a classic game!</li>
+        <li>Snakes are cool.</li>
+        <li>Dinosaurs are cool too but they're dead while snakes are not.</li>
+        <li>We all need WifI, don't we?</li>
+        <li>It'll make the developers happy.</li>
+        <li>It's green like the original Gameboy.</li>
+        <li><a href="./game.html">What are you waiting for just play the darn thing already!</a></li>
+      </ul>
     </div>
 
     <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
+    <script>
+      // repeat 404 on sidebar
+      const errorText = document.getElementById('error-text');
+      for(let i = 0; i < 100; i++) {
+        errorText.innerHTML += '404 ';
+      }
+    </script>
   </body>
 
 </html>
