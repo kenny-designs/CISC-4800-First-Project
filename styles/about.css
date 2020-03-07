@@ -88,3 +88,25 @@
 .image-figure figcaption {
   margin-top: 0.5em;
 }
+
+/* Table Related */
+#response-code-table {
+  border-collapse: collapse;
+  width: 90%;
+  margin: auto;
+}
+
+#response-code-table td,
+#response-code-table th {
+  border: 3px solid var(--darkest-green-color);
+  text-align: left;
+  padding: 8px;
+  font-size: 1.5em;
+}
+
+#response-code-table caption {
+  caption-side: bottom;
+  text-align: left;
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+}
