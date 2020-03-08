@@ -58,12 +58,14 @@
 
 /* Card Related */
 #card-container {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
 }
 
 .card {
   margin: 3em;
-  width: 40%;
+  width: 25%;
   background-color: var(--light-green-color);
 }
 
