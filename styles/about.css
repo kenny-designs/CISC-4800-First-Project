@@ -24,6 +24,9 @@
 
 #snake-sidebar-container a {
   background-color: var(--dark-green-color);
+  border-style: solid;
+  border-color: var(--darkest-green-color);
+  text-align: center;
 }
 
 #snake-sidebar-container a:hover {

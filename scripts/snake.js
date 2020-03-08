@@ -376,7 +376,6 @@ class Snake {
     };
 
     // key mapping
-    // TODO: look into an array of dictionaries/maps
     this.keyMap = {
       'ArrowLeft':  this.directions.LEFT,
       'ArrowRight': this.directions.RIGHT,

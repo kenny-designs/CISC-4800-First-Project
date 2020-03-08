@@ -76,7 +76,6 @@
   text-decoration: underline;
 }
 
-/* TODO: make this look nice. Maybe move to global.css since it's in index.css as well */
 .pixel-button {
   margin-bottom: 1em;
   padding: 0.5vw;
