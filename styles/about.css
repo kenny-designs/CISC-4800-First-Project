@@ -61,10 +61,11 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  justify-content: space-around;
 }
 
 .card {
-  margin: 3em;
+  margin-bottom: 3em;
   width: 25%;
   background-color: var(--light-green-color);
 }
