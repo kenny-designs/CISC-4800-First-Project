@@ -1,7 +1,8 @@
-# CISC-4800-First-Project
-This is my first project for CISC 4800! Oh wow! Oh yes.
+# Snake WiFi Edition
 
 ## I made Snake!
+
+A parody of the Google Dinosaur game.
 
 ![Snake Screenshot](./screenshot.png)
 
